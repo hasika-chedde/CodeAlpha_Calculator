@@ -1,0 +1,247 @@
+/* ============================================================
+   TOKENS
+   Deep slate calculator body on a soft lavender-grey page.
+   Teal for operators, coral for the equals key (the one accent
+   spent in a single place, per design brief).
+   ============================================================ */
+:root {
+  --page-bg-1: #eef0f6;
+  --page-bg-2: #dfe3ee;
+
+  --calc-body: #232833;
+  --calc-body-edge: #2c313d;
+  --display-bg: #171b22;
+
+  --key-num: #2f3542;
+  --key-num-hover: #3a4152;
+  --key-fn: #3b4150;
+  --key-fn-hover: #454c5d;
+
+  --op: #4fb0a5;
+  --op-hover: #5ec2b6;
+  --op-text: #0e2422;
+
+  --equals: #ff6b5c;
+  --equals-hover: #ff7d70;
+
+  --text-light: #f3f5f8;
+  --text-muted: #8b93a3;
+
+  --radius-lg: 26px;
+  --radius-key: 14px;
+
+  --font-ui: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: "Space Mono", "Courier New", monospace;
+
+  --transition: 0.18s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  font-family: var(--font-ui);
+  background: radial-gradient(circle at 30% 20%, var(--page-bg-2), var(--page-bg-1) 70%);
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+/* Visible keyboard focus for accessibility */
+button:focus-visible {
+  outline: 2px solid var(--equals);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   CALCULATOR BODY
+   ============================================================ */
+.calculator {
+  width: 100%;
+  max-width: 360px;
+  background: linear-gradient(160deg, var(--calc-body-edge), var(--calc-body));
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  box-shadow:
+    0 24px 48px rgba(20, 22, 30, 0.28),
+    0 2px 6px rgba(20, 22, 30, 0.2);
+  animation: calc-load 0.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+@keyframes calc-load {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.calc-heading {
+  color: var(--text-light);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 18px;
+  letter-spacing: 0.01em;
+}
+
+/* ============================================================
+   DISPLAY
+   ============================================================ */
+.display {
+  background: var(--display-bg);
+  border-radius: var(--radius-key);
+  padding: 22px 18px 16px;
+  margin-bottom: 18px;
+  text-align: right;
+  overflow: hidden;
+}
+
+.display-expression {
+  min-height: 20px;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow-x: auto;
+}
+
+.display-current {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 8vw, 2.6rem);
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow-x: auto;
+  margin-top: 4px;
+}
+
+/* Error state gets a warning tint */
+.display-current.is-error {
+  color: var(--equals);
+  font-size: 1.7rem;
+}
+
+/* ============================================================
+   BUTTON GRID
+   ============================================================ */
+.keys {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.key {
+  height: 62px;
+  border-radius: var(--radius-key);
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-light);
+  transition: background var(--transition), transform 0.08s ease, box-shadow var(--transition);
+}
+
+.key:hover {
+  transform: translateY(-1px);
+}
+
+/* Press animation: shrink slightly on click for tactile feedback */
+.key:active {
+  transform: scale(0.94);
+}
+
+/* Number keys */
+.key--num {
+  background: var(--key-num);
+}
+.key--num:hover {
+  background: var(--key-num-hover);
+}
+
+/* Zero spans two columns since it's used most often */
+.key--zero {
+  grid-column: span 2;
+}
+
+/* Function keys: clear, backspace, percent */
+.key--fn {
+  background: var(--key-fn);
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+.key--fn:hover {
+  background: var(--key-fn-hover);
+  color: var(--text-light);
+}
+
+/* Operator keys */
+.key--op {
+  background: var(--op);
+  color: var(--op-text);
+}
+.key--op:hover {
+  background: var(--op-hover);
+}
+.key--op.is-active {
+  box-shadow: inset 0 0 0 2px var(--text-light);
+}
+
+/* Equals key: the one deliberate accent in the whole UI */
+.key--equals {
+  background: var(--equals);
+  color: #2a0e09;
+  font-size: 1.3rem;
+  box-shadow: 0 8px 18px rgba(255, 107, 92, 0.35);
+}
+.key--equals:hover {
+  background: var(--equals-hover);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 420px) {
+  .calculator {
+    padding: 20px;
+    border-radius: 20px;
+  }
+
+  .key {
+    height: 56px;
+    font-size: 1.05rem;
+  }
+
+  .display {
+    padding: 18px 14px 14px;
+  }
+}
+
+@media (min-width: 700px) {
+  .calculator {
+    max-width: 380px;
+  }
+
+  .key {
+    height: 68px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
